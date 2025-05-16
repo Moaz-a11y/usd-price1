@@ -2,39 +2,62 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>سعر الدولار الآن</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أسعار العملات لحظيًا</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #111;
       color: #0f0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       height: 100vh;
-      font-size: 3em;
       margin: 0;
+    }
+    h1 {
+      font-size: 2.5em;
+    }
+    .currency {
+      font-size: 1.5em;
+      margin: 10px;
     }
   </style>
 </head>
 <body>
-  <div id="price">جاري التحميل...</div>
+  <h1>أسعار العملات لحظيًا</h1>
+  <div class="currency" id="USD">جاري التحميل...</div>
+  <div class="currency" id="EUR">جاري التحميل...</div>
+  <div class="currency" id="GBP">جاري التحميل...</div>
+  <div class="currency" id="SAR">جاري التحميل...</div>
 
   <script>
-    async function fetchDollarPrice() {
+    async function fetchCurrencyPrices() {
       try {
-        const res = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+        const res = await fetch("https://api.exchangerate-api.com/v4/latest/USD"); // API لأسعار العملات
         const data = await res.json();
-        const egpPrice = data.rates.EGP;
-        document.getElementById("price").textContent = `١ دولار = ${egpPrice.toFixed(2)} جنيه`;
+        
+        const usdPrice = data.rates.EGP;
+        const eurPrice = data.rates.EUR * usdPrice;
+        const gbpPrice = data.rates.GBP * usdPrice;
+        const sarPrice = data.rates.SAR * usdPrice;
+
+        document.getElementById("USD").textContent = `1 دولار = ${usdPrice.toFixed(2)} جنيه`;
+        document.getElementById("EUR").textContent = `1 يورو = ${eurPrice.toFixed(2)} جنيه`;
+        document.getElementById("GBP").textContent = `1 جنيه استرليني = ${gbpPrice.toFixed(2)} جنيه`;
+        document.getElementById("SAR").textContent = `1 ريال سعودي = ${sarPrice.toFixed(2)} جنيه`;
       } catch (error) {
-        document.getElementById("price").textContent = "تعذر تحميل السعر";
+        console.error("Error fetching exchange rates", error);
+        document.getElementById("USD").textContent = "تعذر تحميل الأسعار";
+        document.getElementById("EUR").textContent = "تعذر تحميل الأسعار";
+        document.getElementById("GBP").textContent = "تعذر تحميل الأسعار";
+        document.getElementById("SAR").textContent = "تعذر تحميل الأسعار";
       }
     }
 
-    fetchDollarPrice();
-    setInterval(fetchDollarPrice, 60000);
+    fetchCurrencyPrices();
+    setInterval(fetchCurrencyPrices, 60000); // تحديث كل دقيقة
   </script>
 </body>
 </html>
-Add index.html
