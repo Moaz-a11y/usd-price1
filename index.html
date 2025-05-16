@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>سعر الدولار الآن</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 3em;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="price">جاري التحميل...</div>
+
+  <script>
+    async function fetchDollarPrice() {
+      try {
+        const res = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+        const data = await res.json();
+        const egpPrice = data.rates.EGP;
+        document.getElementById("price").textContent = `١ دولار = ${egpPrice.toFixed(2)} جنيه`;
+      } catch (error) {
+        document.getElementById("price").textContent = "تعذر تحميل السعر";
+      }
+    }
+
+    fetchDollarPrice();
+    setInterval(fetchDollarPrice, 60000);
+  </script>
+</body>
+</html>
+Add index.html
